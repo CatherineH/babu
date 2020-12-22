@@ -22,14 +22,16 @@ export default {
     "sewing pattern"
   ],
   optionGroups: {
-    fit: ["size"]
+    fit: ["sleeveLength"]
   },
-  measurements: ["bicepCircumference"],
+  measurements: ["bicepsCircumference", "chestCircumference",
+  "hipsToUpperLeg", "naturalWaistToHip", "hpsToHipsFront", "hpsToHipsBack",
+  "hipsCircumference"],
   dependencies: {},
   inject: {},
   hide: [],
-  parts: ["sleeve"],//, "neckBinding", "front", "back", "frontBinding", "backBinding"],
+  parts: ["sleeve", "front"],//, "neckBinding", "front", "back", "frontBinding", "backBinding"],
   options: {
-    size: { pct: 50, min: 10, max: 100 }
+    sleeveLength: { mm: 35, min: 10, max: 100 }
   }
 };

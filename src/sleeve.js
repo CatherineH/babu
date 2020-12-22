@@ -1,6 +1,7 @@
 export default function(part) {
   let {
     options,
+	measurements,
     Point,
     Path,
     points,
@@ -12,49 +13,34 @@ export default function(part) {
     paperless,
     macro
   } = part.shorthand()
-
-  let w = 500 * options.size
-  points.topLeft = new Point(0, 0)
-  points.topRight = new Point(w, 0)
-  points.bottomLeft = new Point(0, w / 2)
-  points.bottomRight = new Point(w, w / 2)
-
+  let pi = 3.14159
+  let sleeveShoulderLength = options.sleeveLength*(1+pi/2)
+  points.cuffFront = new Point(0, 0)
+  points.cuffBack = new Point(measurements.bicepsCircumference, 0)
+  points.shoulderFront = new Point(measurements.bicepsCircumference, options.sleeveLength)
+  points.shoulderBack = new Point(0, options.sleeveLength)
+  points.shoulderTop = new Point(measurements.bicepCircumference/2, sleeveShoulderLength)
+  points.shoulderBackC1 = new Point(measurements.bicepCircumference/4, sleeveShoulderLength)
+  points.shoulderBackC2 = new Point(measurements.bicepCircumference/4, options.sleeveLength)
+  points.shoulderFrontC1 = new Point(measurements.bicepCircumference*3/4, options.sleeveLength)
+  points.shoulderFrontC2 = new Point(measurements.bicepCircumference*3/4, sleeveShoulderLength)
   paths.seam = new Path()
-    .move(points.topLeft)
-    .line(points.bottomLeft)
-    .line(points.bottomRight)
-    .line(points.topRight)
-    .line(points.topLeft)
+    .move(points.cuffFront)
+	  .line(points.cuffBack)
+    .line(points.shoulderFront)
+    .curve(points.shoulderFrontC1, points.shoulderFrontC2, points.shoulderTop)
+    .curve(points.shoulderBackC1, points.shoulderBackC2, points.shoulderBack)
     .close()
     .attr('class', 'fabric')
 
   // Complete?
   if (complete) {
-    points.logo = points.topLeft.shiftFractionTowards(points.bottomRight, 0.5)
-    snippets.logo = new Snippet('logo', points.logo)
-    points.text = points.logo
-      .shift(-90, w / 8)
-      .attr('data-text', 'hello')
-      .attr('data-text-class', 'center')
-
     if (sa) {
-      paths.sa = paths.seam.offset(sa).attr('class', 'fabric sa')
-    }
   }
-
   // Paperless?
   if (paperless) {
-    macro('hd', {
-      from: points.bottomLeft,
-      to: points.bottomRight,
-      y: points.bottomLeft.y + sa + 15
-    })
-    macro('vd', {
-      from: points.bottomRight,
-      to: points.topRight,
-      x: points.topRight.x + sa + 15
-    })
   }
+}
 
   return part
 }
